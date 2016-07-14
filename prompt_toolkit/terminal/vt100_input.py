@@ -416,6 +416,8 @@ class raw_mode(object):
         # NOTE: On os X systems, using pty.setraw() fails. Therefor we are using this:
         newattr = termios.tcgetattr(self.fileno)
         newattr[tty.LFLAG] = self._patch(newattr[tty.LFLAG])
+        newattr[tty.IFLAG] &= ~(termios.INLCR | termios.ICRNL | termios.IGNCR)
+        newattr[tty.OFLAG] &= ~termios.OPOST
         termios.tcsetattr(self.fileno, termios.TCSANOW, newattr)
 
         # Put the terminal in cursor mode. (Instead of application mode.)
